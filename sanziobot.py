@@ -33,7 +33,13 @@ modoIrritante = False
 async def on_ready():
     test_guild = discord.Object(id=GUILD_ID)
     await bot.tree.sync(guild=test_guild)
+    await bot.tree.sync()
     print(f"{bot.user} está online!")
+
+#WIP
+@bot.event
+async def on_member_join(member):
+    await member.add_roles(member, discord.guild.roles, name = "Membros [🐶]")
 
 @bot.event
 async def on_message(msg):
@@ -100,23 +106,32 @@ async def play(interaction: discord.Interaction, song_query: str):
     if voice_client.is_playing() or voice_client.is_paused():
         await interaction.followup.send(f"Adicionada a fila: **{title}**")
     else:
-        await interaction.followup.send(f"Agora tocando: **{title}**")
         await play_next_song(voice_client, guild_id, interaction.channel)
 
 @bot.tree.command(name="skip", description="Pular música")
 async def skip(interaction: discord.Interaction):
-    if interaction.guild.voice_client and (interaction.guild.voice_client.is_playing() or interaction.guild.voice_client.is_paused()):
-        interaction.voice_client.stop()
+    voice_client = interaction.guild.voice_client
+
+    if voice_client and (voice_client.is_playing() or voice_client.is_paused()):
+        voice_client.stop()
         await interaction.response.send_message("Pulou a música atual.")
     else:
         await interaction.response.send_message("Não tá tocando nada pra tu querer skippar irmão.")
 
 @bot.tree.command(name="show_queue", description="Mostra a fila de músicas do nova era")
 async def queue(interaction: discord.Interaction):
-    if SONG_QUEUE[interaction.guild_id] is None:
-        await interaction.followup.send("Voce tá pedindo a fila sendo que eu nem to tocando música? kkkkkkkk")
-    else:
-        await interaction.followup.send(f"{SONG_QUEUE}")
+    guild_id = str(interaction.guild_id)
+    queue_for_guild = SONG_QUEUE.get(guild_id)
+
+    if not queue_for_guild:
+        await interaction.response.send_message("Voce tá pedindo a fila sendo que eu nem to tocando música? kkkkkkkk")
+        return
+
+    formatted_queue = "\n".join(
+        f"{index + 1}. {title}" for index, (_, title) in enumerate(queue_for_guild)
+    )
+
+    await interaction.response.send_message(f"Fila de músicas:\n{formatted_queue}")
 
 @bot.tree.command(name="pause", description="Pausar música")
 async def pause(interaction: discord.Interaction):
