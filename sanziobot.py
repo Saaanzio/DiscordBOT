@@ -9,8 +9,6 @@ from collections import deque
 
 SONG_QUEUE = {}
 
-GUILD_ID = 842762534784466944
-
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
 
@@ -31,25 +29,22 @@ modoIrritante = False
 
 @bot.event
 async def on_ready():
-    test_guild = discord.Object(id=GUILD_ID)
-    await bot.tree.sync(guild=test_guild)
-    await bot.tree.sync()
     print(f"{bot.user} está online!")
 
 #WIP
 @bot.event
 async def on_member_join(member):
-    await member.add_roles(member, discord.guild.roles, name = "Membros [🐶]")
+    await member.add_roles(member, discord.guild.roles, name = "Membros")
 
 @bot.event
 async def on_message(msg):
     if msg.author.id != bot.user.id and modoIrritante == True:
-        await msg.channel.send(f"Que mensagem foda, {msg.author.mention}!")
+        await msg.channel.send(f"Que mensagem linda, {msg.author.mention}!")
 
 @bot.event
 async def on_message_edit(before,after):
     if before.author.id != bot.user.id:
-        await before.channel.send(f"{before.author.mention} editou a mensagem '{before.content}' para '{after.content}', que covarde!")
+        await before.channel.send(f"{before.author.mention} editou a mensagem '{before.content}' para '{after.content}'!")
 
 @bot.tree.command(name="greet", description="Da um bom dia para o usuario")
 async def greet(interaction: discord.Interaction):
@@ -62,10 +57,10 @@ async def modo_irritante(interaction: discord.Interaction):
     username = interaction.user.mention
     if modoIrritante == False:
         modoIrritante = True
-        await interaction.response.send_message(f"{username} ativou o modo irritante!")
+        await interaction.response.send_message(f"{username} ativou o modo analisador de mensagens!")
     else:
         modoIrritante = False
-        await interaction.response.send_message(f"{username} desativou o modo irritante!")
+        await interaction.response.send_message(f"{username} desativou o modo analisador de mensagens!")
 
 @bot.tree.command(name="play", description="Toca música")
 async def play(interaction: discord.Interaction, song_query: str):
@@ -73,7 +68,7 @@ async def play(interaction: discord.Interaction, song_query: str):
     voice_channel = interaction.user.voice.channel
 
     if voice_channel is None:
-        await interaction.followup.send("Amigão, você tem que estar em um canal de voz para ouvir musga.")
+        await interaction.followup.send("Amigo, você tem que estar em um canal de voz para ouvir musica.")
     voice_client = interaction.guild.voice_client
     if voice_client is None:
         voice_client = await voice_channel.connect()
@@ -92,7 +87,7 @@ async def play(interaction: discord.Interaction, song_query: str):
     tracks = result.get("entries", [])
 
     if tracks is None:
-        await interaction.followup.send("Não achei nada")
+        await interaction.followup.send("Não encontrei nada")
         return
     first_track = tracks[0]
     audio_url = first_track["url"]
@@ -116,15 +111,15 @@ async def skip(interaction: discord.Interaction):
         voice_client.stop()
         await interaction.response.send_message("Pulou a música atual.")
     else:
-        await interaction.response.send_message("Não tá tocando nada pra tu querer skippar irmão.")
+        await interaction.response.send_message("Não tá tocando nada para poder skippar.")
 
-@bot.tree.command(name="show_queue", description="Mostra a fila de músicas do nova era")
+@bot.tree.command(name="show_queue", description="Mostra a fila de músicas.")
 async def queue(interaction: discord.Interaction):
     guild_id = str(interaction.guild_id)
     queue_for_guild = SONG_QUEUE.get(guild_id)
 
     if not queue_for_guild:
-        await interaction.response.send_message("Voce tá pedindo a fila sendo que eu nem to tocando música? kkkkkkkk")
+        await interaction.response.send_message("Não está tocando nenhuma música no momento para eu exibir a fila.")
         return
 
     formatted_queue = "\n".join(
@@ -138,7 +133,7 @@ async def pause(interaction: discord.Interaction):
     voice_client = interaction.guild.voice_client
     
     if voice_client is None:
-        return await interaction.response.send_message("Amigão, eu to nem em um canal de voz, imagina querer que eu pause algo.")
+        return await interaction.response.send_message("Não estou em um canal de voz para pausar.")
     
     if not voice_client.is_playing():
         return await interaction.response.send_message("Tem nada tocando.")
@@ -152,7 +147,7 @@ async def resume(interaction: discord.Interaction):
     voice_client = interaction.guild.voice_client
     
     if voice_client is None:
-        return await interaction.response.send_message("Amigão, eu to nem em um canal de voz, imagina querer que eu resuma algo.")
+        return await interaction.response.send_message("Não estou em um canal de voz para resumir algo.")
     
     if not voice_client.is_playing():
         return await interaction.response.send_message("Tem nada tocando.")
@@ -166,7 +161,7 @@ async def stop(interaction: discord.Interaction):
     voice_client = interaction.guild.voice_client
     
     if not voice_client or not voice_client.is_connected():
-        await interaction.followup.send("Amigão, eu to nem em um canal de voz, imagina querer que eu pare algo.")
+        await interaction.followup.send("Não estou em um canal de voz para parar algo.")
         return
     
     guild_id_str = str(interaction.guild.id)
