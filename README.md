@@ -27,13 +27,9 @@ Um bot do Discord em Python focado em comandos de música e algumas interações
 
 ## Configuração do ambiente
 
-1. Instale as dependências Python (recomendo usar um virtualenv):
+1. Instale as dependências Python:
 
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-   > Se você ainda não tiver um `requirements.txt`, as principais libs usadas são: `discord.py` (com suporte a app_commands), `python-dotenv` e `yt-dlp`.
+   > As principais libs usadas são: `discord.py`, `python-dotenv` e `yt-dlp`.
 
 2. Crie um arquivo `.env` na raiz do projeto (baseando-se em `.env-example`, se existir) com, pelo menos:
 
