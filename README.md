@@ -1,10 +1,10 @@
 # Discord bot
 
-Um bot do Discord em Python focado em comandos de música e algumas interações divertidas em texto.
+Um bot do Discord em Python focado em comandos de música e algumas interações em texto.
 
 ## Funcionalidades
 
-- **Slash commands** (via Discord Application Commands):
+- **Slash commands** (Discord Application Commands):
   - `/greet` – Dá bom dia mencionando o usuário.
   - `/modo_irritante` – Liga/desliga o modo que responde a todas as mensagens de texto dos usuários.
   - `/play <termo>` – Toca música do YouTube (busca com yt-dlp) no canal de voz do usuário e gerencia fila por servidor.
@@ -54,7 +54,7 @@ Dentro da pasta do projeto:
 python discordbot.py
 ```
 
-Se o token estiver correto e o bot tiver sido adicionado ao seu servidor, ele ficará online e os comandos slash aparecerão (pode levar alguns minutos para propagarem nas guias do Discord).
+Se o token estiver correto e o bot tiver sido adicionado ao seu servidor, ele ficará online e os comandos slash aparecerão (pode levar minutos até horas).
 
 ## Estrutura básica do projeto
 
@@ -63,6 +63,6 @@ Se o token estiver correto e o bot tiver sido adicionado ao seu servidor, ele fi
 
 ## Observações
 
-- A fila de músicas é mantida em memória por servidor (guild) usando um `deque`.
+- A fila de músicas é mantida em memória por servidor usando um `deque`.
 - O bot usa `yt-dlp` para buscar e extrair a URL de áudio do YouTube sem baixar o arquivo.
 - Caso os slash commands não apareçam, confira se o bot tem as permissões corretas e se você está no servidor onde ele foi registrado.
