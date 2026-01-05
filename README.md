@@ -1,6 +1,6 @@
 # Discord bot
 
-Um bot do Discord em Python focado em comandos de música e algumas interações em texto.
+Um bot do Discord em Python focado em comandos de música e algumas interações em texto. O bot originalmente foi feito para aprender Python e proporcionar bons momentos em grupos no Discord.
 
 ## Funcionalidades
 
